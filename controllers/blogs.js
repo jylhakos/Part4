@@ -1,10 +1,13 @@
+const logger = require('../utils/logger')
 
 const blogsRouter = require('express').Router()
 
 const Blog = require('../models/blog')
 
 blogsRouter.get('/api/blogs', (request, response) => {
-  console.log(request.body)
+
+  logger.info(request.body)
+
   Blog
     .find({})
     .then(blogs => {
@@ -19,42 +22,48 @@ blogsRouter.post('/api/blogs', (request, response) => {
 
   const blog = new Blog(request.body)
 
-  console.log(request.body)
+  logger.info(request.body)
 
   blog
     .save()
     .then(result => {
-      console.log(result)
+      logger.info(result)
       response.status(201).json(result)
     })
 })
 
 // $ curl -X "POST" http://localhost:3003/api/blogs -H "Content-Type: application/json" -d "{\"title\":\"Hello World\", \"author\":\"Jane Austin\", \"url\":\"http://hello.world.com\", \"likes\":\"0\"}"
 
-
-/*blogsRouter.get('/', (request, response) => {
+blogsRouter.get('/api/blogs', (request, response) => {
 
   Blog({}).then(blogs => {
+    logger.info(blogs)
     response.json(blogs.map(blog => blog.toJSON()))
   })
 })
 
-blogsRouter.get('/:id', (request, response, next) => {
+blogsRouter.get('/api/blogs/:id', (request, response, next) => {
 
   Blog.findById(request.params.id)
     .then(blog => {
       if (blog) {
+        logger.info(blog)
         response.json(blog.toJSON())
       } else {
+        logger.info('404')
         response.status(404).end()
       }
     })
     .catch(error => next(error))
 })
 
-blogsRouter.post('/', (request, response, next) => {
+blogsRouter.post('/api/blogs', (request, response, next) => {
+
+  const logger = require('./utils/logger')
 
   const body = request.body
+
+  logger.info(body)
 
   const blog = new Blog({
     title: String,
@@ -64,13 +73,15 @@ blogsRouter.post('/', (request, response, next) => {
   })
 
   blog.save()
-    .then(savedBlog {
+    .then(savedBlog => {
       response.json(savedBlog.toJSON())
     })
     .catch(error => next(error))
 })
 
-blogsRouter.delete('/:id', (request, response, next) => {
+blogsRouter.delete('/api/blogs/:id', (request, response, next) => {
+
+  logger.info(request.params.id)
 
   Blog.findByIdAndRemove(request.params.id)
     .then(() => {
@@ -79,9 +90,11 @@ blogsRouter.delete('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-blogsRouter.put('/:id', (request, response, next) => {
+blogsRouter.put('/api/blogs/:id', (request, response, next) => {
 
   const body = request.body
+
+  logger.info(body)
 
   const blog = {
     title: String,
@@ -95,6 +108,6 @@ blogsRouter.put('/:id', (request, response, next) => {
       response.json(updatedBlog.toJSON())
     })
     .catch(error => next(error))
-})*/
+})
 
 module.exports = blogsRouter

@@ -1,10 +1,17 @@
 // $ export PORT=3003
 // $ export MONGODB_URI="mongodb+srv://fullstack:PASSWORD@cluster0.txqus.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+// $ npm install --save-dev nodemon
+
+// 4.1 
+// $ npx nodemon --exec npm start
+
+// 4.2 
 // $ npm start
-// $ nodemon --exec npm start
 
 const config = require('./utils/config')
+
 const express = require('express')
+
 const app = express()
 
 const cors = require('cors')
@@ -17,7 +24,7 @@ const logger = require('./utils/logger')
 
 const mongoose = require('mongoose')
 
-logger.info('connecting to', config.MONGODB_URI)
+logger.info('Connecting to', config.MONGODB_URI)
 
 //config.MONGODB_URI = "mongodb+srv://fullstack:PASSWORD@cluster0.txqus.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
@@ -38,9 +45,10 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 
 //app.use('/api/blogs', blogsRouter)
+// 4.1
 app.use(blogsRouter)
 
-//app.use(middleware.unknownEndpoint)
+app.use(middleware.unknownEndpoint)
 
 app.use(middleware.errorHandler)
 
