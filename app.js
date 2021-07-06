@@ -1,5 +1,5 @@
 // $ export PORT=3003
-// $ export MONGODB_URI="mongodb+srv://fullstack:fullstack@cluster0.txqus.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+// $ export MONGODB_URI="mongodb+srv://fullstack:PASSWORD@cluster0.txqus.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 // $ npm start
 // $ nodemon --exec npm start
 
@@ -19,7 +19,7 @@ const mongoose = require('mongoose')
 
 logger.info('connecting to', config.MONGODB_URI)
 
-//config.MONGODB_URI = "mongodb+srv://fullstack:fullstack@cluster0.txqus.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+//config.MONGODB_URI = "mongodb+srv://fullstack:PASSWORD@cluster0.txqus.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
   .then(() => {
