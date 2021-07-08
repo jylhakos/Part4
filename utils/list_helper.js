@@ -9,7 +9,7 @@ const dummy = (blogs) =>  {
 // 4.4
 const totalLikes = (list_of_blogs) => {
 
-  const likes_array = list_of_blogs.map(values => values.likes);
+  const likes_array = list_of_blogs.map(values => values.likes)
 
   const reducer = (likes, like) => {
 
