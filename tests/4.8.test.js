@@ -66,8 +66,6 @@ test('there are three blogs in list', async () => {
   expect(response.body).toHaveLength(3)
 })
 
-
-
 test('the three blogs have seventeen likes', async () => {
 
   const response = await api.get('/api/blogs')
