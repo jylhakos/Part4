@@ -55,7 +55,7 @@ test('Creates new blog post', async () => {
 
   expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
 
-  console.log('blogsAtEnd', blogsAtEnd)
+  // console.log('blogsAtEnd', blogsAtEnd)
 
   const contents = blogsAtEnd.map(n => n.title)
 

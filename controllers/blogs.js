@@ -79,15 +79,29 @@ blogsRouter.post('/api/blogs', (request, response, next) => {
     .catch(error => next(error))
 })
 
-blogsRouter.delete('/api/blogs/:id', (request, response, next) => {
+// $ curl -X -v "DELETE" "http://localhost:3003/api/blogs/5a422a851b54a676234d17f8"
 
-  logger.info(request.params.id)
+// 4.13
+blogsRouter.delete('/api/blogs/:id', async (request, response, next) => {
 
-  Blog.findByIdAndRemove(request.params.id)
+  logger.info('request.params.id', request.params.id)
+
+  // 4.1
+  /*Blog.findByIdAndDelete(request.params.id)
     .then(() => {
+      logger.info(response)
       response.status(204).end()
     })
-    .catch(error => next(error))
+    .catch(error => next(error))*/
+
+    // 4.13
+  try {
+    await Blog.findByIdAndRemove(request.params.id)
+    logger.info(response)
+    response.status(204).end()
+  } catch (error) {
+    logger.error(error)
+  }
 })
 
 blogsRouter.put('/api/blogs/:id', (request, response, next) => {
