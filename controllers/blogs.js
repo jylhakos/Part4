@@ -6,6 +6,8 @@ const Blog = require('../models/blog')
 
 var ObjectId = require('mongodb').ObjectID;
 
+const User = require('../models/user')
+
 // $ curl -X "GET" http://localhost:3003/api/blogs 
 
 /*blogsRouter.get('/api/blogs', (request, response) => {
@@ -22,10 +24,13 @@ var ObjectId = require('mongodb').ObjectID;
 
 // $ curl -X "GET" http://localhost:3003/api/blogs
 
+// 4.17
 blogsRouter.get('/api/blogs', async (request, response) => {
 
-  const blogs = await Blog.find({})
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1, _id: 1 }, User) 
+  
   console.log(blogs)
+
   response.json(blogs.map(blog => blog.toJSON()))
 
   /*Blog({}).then(blogs => {
@@ -60,19 +65,19 @@ blogsRouter.get('/api/blogs/:id', async (request, response) => {
 
 // $ curl -X "POST" http://localhost:3003/api/blogs -H "Content-Type: application/json" -d "{\"title\":\"React patterns\", \"author\":\"Michael Chan\", \"url\":\"https://reactpatterns.com/\", \"likes\":\"5\"}"
 
+// 4.17
 blogsRouter.post('/api/blogs', async (request, response) => {
-
-  const logger = require('./utils/logger')
 
   const body = request.body
 
   logger.info(body)
 
   const blog = new Blog({
-    title: String,
-    author: String,
-    url: String,
-    likes: Number,
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
+    user: '60e9604707186054563bd9fc',
   })
 
   try {
