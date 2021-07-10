@@ -38,10 +38,14 @@ blogsRouter.post('/api/blogs', (request, response) => {
 
 blogsRouter.get('/api/blogs', async (request, response) => {
 
-  await Blog({}).then(blogs => {
+  const blogs = await Blog.find({})
+  console.log(blogs)
+  response.json(blogs.map(blog => blog.toJSON()))
+
+  /*Blog({}).then(blogs => {
     logger.info(blogs)
     response.json(blogs.map(blog => blog.toJSON()))
-  })
+  })*/
 })
 
 // $ curl -X "GET" http://localhost:3003/api/blogs/60e907b55efce114a45f6b08

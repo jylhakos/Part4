@@ -2,6 +2,8 @@ const logger = require('./logger')
 
 const Blog = require('../models/blog')
 
+const User = require('../models/user')
+
 // 4.3
 const dummy = (blogs) =>  {
   logger.info('dummy')
@@ -33,8 +35,19 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+// 4.15
+const usersInDb = async () => {
+
+  const users = await User.find({})
+
+  console.log(users)
+
+  return users.map(user => user.toJSON())
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  blogsInDb
+  blogsInDb,
+  usersInDb
 };
