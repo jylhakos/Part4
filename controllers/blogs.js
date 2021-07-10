@@ -6,7 +6,9 @@ const Blog = require('../models/blog')
 
 var ObjectId = require('mongodb').ObjectID;
 
-blogsRouter.get('/api/blogs', (request, response) => {
+// $ curl -X "GET" http://localhost:3003/api/blogs 
+
+/*blogsRouter.get('/api/blogs', (request, response) => {
 
   logger.info(request.body)
 
@@ -16,23 +18,7 @@ blogsRouter.get('/api/blogs', (request, response) => {
       console.log(blogs)
       response.json(blogs)
     })
-})
-
-// $ curl -X "GET" http://localhost:3003/api/blogs 
-
-blogsRouter.post('/api/blogs', (request, response) => {
-
-  const blog = new Blog(request.body)
-
-  logger.info(request.body)
-
-  blog
-    .save()
-    .then(result => {
-      logger.info(result)
-      response.status(201).json(result)
-    })
-})
+})*/
 
 // $ curl -X "GET" http://localhost:3003/api/blogs
 
@@ -98,6 +84,20 @@ blogsRouter.post('/api/blogs', async (request, response) => {
   }
 
 })
+
+/*blogsRouter.post('/api/blogs', (request, response) => {
+
+  const blog = new Blog(request.body)
+
+  logger.info(request.body)
+
+  blog
+    .save()
+    .then(result => {
+      logger.info(result)
+      response.status(201).json(result)
+    })
+})*/
 
 // $ curl -X "DELETE" "http://localhost:3003/api/blogs/60e907f15efce114a45f6b0a"
 
