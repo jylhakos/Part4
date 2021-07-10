@@ -4,6 +4,8 @@ const blogsRouter = require('express').Router()
 
 const Blog = require('../models/blog')
 
+var ObjectId = require('mongodb').ObjectID;
+
 blogsRouter.get('/api/blogs', (request, response) => {
 
   logger.info(request.body)
@@ -32,20 +34,29 @@ blogsRouter.post('/api/blogs', (request, response) => {
     })
 })
 
-// $ curl -X "POST" http://localhost:3003/api/blogs -H "Content-Type: application/json" -d "{\"title\":\"Hello World\", \"author\":\"Jane Austin\", \"url\":\"http://hello.world.com\", \"likes\":\"0\"}"
+// $ curl -X "GET" http://localhost:3003/api/blogs
 
-blogsRouter.get('/api/blogs', (request, response) => {
+blogsRouter.get('/api/blogs', async (request, response) => {
 
-  Blog({}).then(blogs => {
+  await Blog({}).then(blogs => {
     logger.info(blogs)
     response.json(blogs.map(blog => blog.toJSON()))
   })
 })
 
-blogsRouter.get('/api/blogs/:id', (request, response, next) => {
+// $ curl -X "GET" http://localhost:3003/api/blogs/60e907b55efce114a45f6b08
 
-  Blog.findById(request.params.id)
-    .then(blog => {
+blogsRouter.get('/api/blogs/:id', async (request, response) => {
+
+  const blog = await Blog.findById(request.params.id)
+
+  if (blog) {
+    response.json(blog.toJSON())
+  } else {
+    logger.info('404')
+    response.status(404).end()
+  }
+    /*.then(blog => {
       if (blog) {
         logger.info(blog)
         response.json(blog.toJSON())
@@ -54,10 +65,12 @@ blogsRouter.get('/api/blogs/:id', (request, response, next) => {
         response.status(404).end()
       }
     })
-    .catch(error => next(error))
+    .catch(error => next(error))*/
 })
 
-blogsRouter.post('/api/blogs', (request, response, next) => {
+// $ curl -X "POST" http://localhost:3003/api/blogs -H "Content-Type: application/json" -d "{\"title\":\"React patterns\", \"author\":\"Michael Chan\", \"url\":\"https://reactpatterns.com/\", \"likes\":\"5\"}"
+
+blogsRouter.post('/api/blogs', async (request, response) => {
 
   const logger = require('./utils/logger')
 
@@ -72,17 +85,20 @@ blogsRouter.post('/api/blogs', (request, response, next) => {
     likes: Number,
   })
 
-  blog.save()
-    .then(savedBlog => {
+  try {
+    const savedBlog = await blog.save()
+      logger.info(savedBlog)
       response.json(savedBlog.toJSON())
-    })
-    .catch(error => next(error))
+    } catch (error) {
+      logger.error(error)
+  }
+
 })
 
-// $ curl -X -v "DELETE" "http://localhost:3003/api/blogs/5a422a851b54a676234d17f8"
+// $ curl -X "DELETE" "http://localhost:3003/api/blogs/60e907f15efce114a45f6b0a"
 
 // 4.13
-blogsRouter.delete('/api/blogs/:id', async (request, response, next) => {
+blogsRouter.delete('/api/blogs/:id', async (request, response) => {
 
   logger.info('request.params.id', request.params.id)
 
@@ -94,34 +110,42 @@ blogsRouter.delete('/api/blogs/:id', async (request, response, next) => {
     })
     .catch(error => next(error))*/
 
-    // 4.13
+  // 4.13
   try {
-    await Blog.findByIdAndRemove(request.params.id)
-    logger.info(response)
-    response.status(204).end()
+    const deletedBlog = await Blog.findByIdAndRemove(request.params.id)
+    logger.info(deletedBlog)
+    response.json(deletedBlog.toJSON())
   } catch (error) {
     logger.error(error)
   }
 })
 
-blogsRouter.put('/api/blogs/:id', (request, response, next) => {
+// $ curl -X "PUT" "http://localhost:3003/api/blogs/60e907b55efce114a45f6b08" -H "Content-Type: application/json" -d "{\"title\":\"React patterns\", \"author\":\"Michael Chan\", \"url\":\"https://reactpatterns.com/", \"likes\":\"5\"}" -v
+
+// 4.14 
+blogsRouter.put('/api/blogs/:id', async (request, response) => {
 
   const body = request.body
 
   logger.info(body)
 
-  const blog = {
-    title: String,
-    author: String,
-    url: String,
-    likes: Number
-  }
+  console.log(body)
 
-  Blog.findByIdAndUpdate(request.params.id, note, { new: true })
-    .then(updatedBlog => {
-      response.json(updatedBlog.toJSON())
-    })
-    .catch(error => next(error))
+  /*const blog = {
+    _id: request.params.id,
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
+  }*/
+
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate({_id: ObjectId(request.params.id)}, {$inc: {'likes': body.likes}}, { new: true })
+    logger.info(updatedBlog)
+    response.json(updatedBlog.toJSON())
+  } catch (error) {
+    logger.error(error)
+  }
 })
 
 module.exports = blogsRouter

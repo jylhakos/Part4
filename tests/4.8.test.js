@@ -16,7 +16,7 @@ const logger = require('../utils/logger')
 
 const initialBlogs = [
   {
-    _id: '5a422aa71b54a676234d17f4',
+    _id: '5a422aa71b54a676234d17f0',
     title: 'Go To Statement Considered Harmful',
     author: 'Edsger W. Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
@@ -24,7 +24,7 @@ const initialBlogs = [
     __v: 0
     },
   {
-      _id: "5a422a851b54a676234d17f5",
+      _id: "5a422a851b54a676234d17f1",
       title: "React patterns",
       author: "Michael Chan",
       url: "https://reactpatterns.com/",
@@ -32,11 +32,11 @@ const initialBlogs = [
       __v: 0
     },
     {
-      _id: "5a422aa71b54a676234d17f6",
-      title: "Go To Statement Considered Harmful",
-      author: "Edsger W. Dijkstra",
-      url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-      likes: 5,
+      _id: "5a422b891b54a676234d17f2",
+      title: "First class tests",
+      author: "Robert C. Martin",
+      url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html",
+      likes: 10,
       __v: 0
     }
 ]
