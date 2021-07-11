@@ -24,6 +24,9 @@ const usersRouter = require('./controllers/users')
 
 const blogsRouter = require('./controllers/blogs')
 
+// 4.18
+const loginRouter = require('./controllers/login')
+
 const middleware = require('./utils/middleware')
 
 const logger = require('./utils/logger')
@@ -56,6 +59,9 @@ app.use(usersRouter)
 //app.use('/api/blogs', blogsRouter)
 // 4.1
 app.use(blogsRouter)
+
+// 4.18
+app.use(loginRouter)
 
 app.use(middleware.unknownEndpoint)
 
