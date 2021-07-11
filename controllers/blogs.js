@@ -8,6 +8,22 @@ var ObjectId = require('mongodb').ObjectID;
 
 const User = require('../models/user')
 
+// 4.19
+const jwt = require('jsonwebtoken')
+
+// 4.19
+const getTokenFrom = request => {
+
+  const authorization = request.get('authorization')
+
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+
+    return authorization.substring(7)
+  }
+
+  return null
+}
+
 // $ curl -X "GET" http://localhost:3003/api/blogs 
 
 /*blogsRouter.get('/api/blogs', (request, response) => {
@@ -65,26 +81,57 @@ blogsRouter.get('/api/blogs/:id', async (request, response) => {
 
 // $ curl -X "POST" http://localhost:3003/api/blogs -H "Content-Type: application/json" -d "{\"title\":\"React patterns\", \"author\":\"Michael Chan\", \"url\":\"https://reactpatterns.com/\", \"likes\":\"5\"}"
 
-// 4.17
+// $ curl -X "POST" http://localhost:3003/api/blogs -H "Content-Type: application/json" -H "Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2MGU5NjA0NzA3MTg2MDU0NTYzYmQ5ZmMiLCJpYXQiOjE2MjU5NjU4NDl9.UdJx2pAefZfdR_5JMjvtcNk-KtbgCJtjGmbloiPqq6c" -d "{\"title\":\"Canonical string reduction\", \"author\":\"Edsger W. Dijkstra\", \"url\":\"http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html\", \"likes\":\"5\"}"
+
+// 4.17, 4.19
 blogsRouter.post('/api/blogs', async (request, response) => {
+
+  logger.info(request)
 
   const body = request.body
 
   logger.info(body)
+
+  //console.log(body)
+
+  // 4.19
+  const token = getTokenFrom(request)
+
+  logger.info(token)
+
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+
+  logger.info(decodedToken)
+
+  if (!token || !decodedToken.id) {
+
+    return response.status(401).json({ error: 'The token is missing or invalid' })
+  }
+
+  const user = await User.findById(decodedToken.id)
+
+  logger.info(user)
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: '60e9604707186054563bd9fc',
+    user: user._id,
   })
 
+  logger.info(blog)
+
   try {
+
     const savedBlog = await blog.save()
-      logger.info(savedBlog)
-      response.json(savedBlog.toJSON())
+
+    logger.info(savedBlog)
+
+    response.json(savedBlog.toJSON())
+
     } catch (error) {
+
       logger.error(error)
   }
 
