@@ -128,6 +128,14 @@ blogsRouter.post('/api/blogs', async (request, response) => {
 
     logger.info(savedBlog)
 
+    user.blogs = user.blogs.concat(savedBlog._id)
+
+    logger.info('user.blogs', user.blogs)
+
+    const savedUser = await user.save()
+
+    logger.info(savedUser)
+
     response.json(savedBlog.toJSON())
 
     } catch (error) {
